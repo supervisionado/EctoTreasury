@@ -6,7 +6,7 @@ const { ethers } = await hre.network.create();
 
 describe("EctoTreasury unit test", function () {
 
- // Define a fixture that deploys your contracts and returns whatever you need
+  // Define a fixture that deploys your contracts and returns whatever you need
   async function deployFixture() {
 
     const [owner, otherAcc] = await ethers.getSigners(); 
@@ -22,7 +22,6 @@ describe("EctoTreasury unit test", function () {
     
     const { networkHelpers } = await hre.network.create();
     const { et, owner, otherAcc } = await networkHelpers.loadFixture(deployFixture);
-
   
     const balance = await et.balance();
   
