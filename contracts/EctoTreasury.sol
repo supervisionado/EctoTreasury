@@ -33,11 +33,13 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
 
     error InvalidDeposit();
     error InsufficientBalance();
+    error InvalidAddress();
 
     constructor() 
         Ownable(msg.sender) {
     }
 
+    // Change allowance state on token contract
     function setAllowedToken(
     address token,
     bool allowed
@@ -46,6 +48,7 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
         allowedTokens[token] = allowed;
     }
 
+    // Deposit native ETH
     function deposit() external payable nonReentrant {
 
         if (msg.value<=0) revert InvalidDeposit();
@@ -60,6 +63,7 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
 
     }
 
+    // Deposit any authorized token
     function depositToken(
         address token,
         uint256 amount
@@ -90,7 +94,7 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
         );
     }    
 
-    /// Allows the owner to withdraw some collected funds 
+    /// Allows the owner to withdraw some collected funds
     function withdrawTo(
         address to,
         uint256 amount
@@ -114,16 +118,14 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
 
     }     
 
+    /// Allows the owner to withdraw some collected tokens
     function withdrawTokenTo(
         address token,
         address to,
         uint256 amount
     ) external onlyOwner {
 
-        require(
-            to != address(0),
-            "Invalid recipient"
-        );
+        if (to == address(0)) revert InvalidAddress();
 
         IERC20(token).safeTransfer(
             to,
@@ -132,6 +134,7 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
 
     }      
 
+    /// Allows the owner to withdraw ALL collected funds on specific token
     function withdrawAllTokenTo(
         address token,
         address to
@@ -139,9 +142,14 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
         external
         onlyOwner
     {
+
+        if (to == address(0)) revert InvalidAddress();
+
         uint256 balance =
             IERC20(token)
                 .balanceOf(address(this));
+
+        if (balance==0) revert InsufficientBalance();                
 
         IERC20(token)
             .safeTransfer(
@@ -151,6 +159,7 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
 
     }
 
+    // Get balance of native ETH
     function balance()
         external
         view
@@ -159,6 +168,7 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
         return address(this).balance;
     }
 
+    // Get balance of ERC-20 token
     function tokenBalance(
     address token
     )
