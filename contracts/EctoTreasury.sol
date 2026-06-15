@@ -63,9 +63,10 @@ contract EctoTreasury is Ownable, Pausable {
 
     }
 
-    // Accept direct transfer of native ETH, and yet allows to register it as righful  
-    // deposit in users ledger by emitting the adequate event
-    receive() external payable {
+    // Accept direct native currency transfers and emit a Deposit event
+    // so off-chain indexers can track them.
+    receive() external payable whenNotPaused {
+        
         if (msg.value == 0) revert InvalidDeposit();
 
         emit Deposit(
@@ -73,6 +74,7 @@ contract EctoTreasury is Ownable, Pausable {
             address(0),
             msg.value
         );
+
     }    
 
     // Deposit any authorized token
@@ -195,12 +197,12 @@ contract EctoTreasury is Ownable, Pausable {
     }
 
     /// Pause contract activity
-    function pause() public onlyOwner {
+    function pause() external onlyOwner {
         _pause();
     }
 
     /// Unpause contract activity
-    function unpause() public onlyOwner {
+    function unpause() external onlyOwner {
         _unpause();
     }
 
