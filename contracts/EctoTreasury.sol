@@ -3,11 +3,8 @@ pragma solidity ^0.8.33;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-
-using SafeERC20 for IERC20;
 
 /* 
 
@@ -22,7 +19,7 @@ using SafeERC20 for IERC20;
 
 */
 
-contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
+contract EctoTreasury is Ownable, Pausable {
 
     using Address for address payable;
     using SafeERC20 for IERC20;
@@ -36,7 +33,6 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
     );
 
     error InvalidDeposit();
-    error DepositFailed();
     error InsufficientBalance();
     error InvalidAddress();
     error TokenNotAllowed();
@@ -55,9 +51,9 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
     }
 
     // Deposit native ETH
-    function deposit() external payable nonReentrant whenNotPaused {
+    function deposit() external payable whenNotPaused {
 
-        if (msg.value<=0) revert InvalidDeposit();
+        if (msg.value==0) revert InvalidDeposit();
 
         emit Deposit(
             msg.sender,
@@ -71,7 +67,7 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
     function depositToken(
         address token,
         uint256 amount
-    ) external nonReentrant whenNotPaused
+    ) external whenNotPaused
     {
         
         if (!allowedTokens[token]) revert TokenNotAllowed();
@@ -184,6 +180,16 @@ contract EctoTreasury is Ownable, Pausable, ReentrancyGuard {
     {
         return IERC20(token)
             .balanceOf(address(this));
+    }
+
+    /// Pause contract activity
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    /// Unpause contract activity
+    function unpause() public onlyOwner {
+        _unpause();
     }
 
 
