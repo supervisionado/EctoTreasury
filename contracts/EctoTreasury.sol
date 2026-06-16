@@ -33,7 +33,8 @@ contract EctoTreasury is Ownable, Pausable {
     );
 
     error InvalidDeposit();
-    error InsufficientBalance();
+    error InsufficientTokenBalance();
+    error InsufficientETHBalance();
     error InvalidAddress();
     error TokenNotAllowed();
 
@@ -117,7 +118,7 @@ contract EctoTreasury is Ownable, Pausable {
         if (to == address(0)) revert InvalidAddress();
 
         uint256 ethbalance = address(this).balance;
-        if (amount > ethbalance) revert InsufficientBalance();
+        if (amount > ethbalance) revert InsufficientETHBalance();
 
         payable(to).sendValue(amount);
     }
@@ -128,7 +129,7 @@ contract EctoTreasury is Ownable, Pausable {
         if (addTo == address(0)) revert InvalidAddress();   
 
         uint256 ethbalance = address(this).balance;
-        if (ethbalance==0) revert InsufficientBalance();
+        if (ethbalance==0) revert InsufficientETHBalance();
 
         payable(addTo).sendValue(ethbalance);
 
@@ -142,6 +143,7 @@ contract EctoTreasury is Ownable, Pausable {
     ) external onlyOwner {
 
         if (to == address(0)) revert InvalidAddress();
+        if (!allowedTokens[token]) revert TokenNotAllowed();        
 
         IERC20(token).safeTransfer(
             to,
@@ -160,12 +162,13 @@ contract EctoTreasury is Ownable, Pausable {
     {
 
         if (to == address(0)) revert InvalidAddress();
+        if (!allowedTokens[token]) revert TokenNotAllowed();
 
         uint256 tbalance =
             IERC20(token)
                 .balanceOf(address(this));
 
-        if (tbalance==0) revert InsufficientBalance();                
+        if (tbalance==0) revert InsufficientTokenBalance();                
 
         IERC20(token)
             .safeTransfer(
@@ -192,6 +195,7 @@ contract EctoTreasury is Ownable, Pausable {
         view
         returns (uint256)
     {
+        if (!allowedTokens[token]) revert TokenNotAllowed();
         return IERC20(token)
             .balanceOf(address(this));
     }
