@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npx hardhat node",
     "test": "npx hardhat test test/EctoTreasury.test.ts --coverage",
-    "deploy:dev": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network hardhatMainnet",
+    "test:deposit": "npx hardhat run scripts/testDeposit.ts --network localhost",
+    "deploy:dev": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network localhost",
     "deploy:sep": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network sepolia",
     "deploy:eth": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network mainnet",
     "deploy:stst": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network sonicTestnet"
