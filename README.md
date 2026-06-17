@@ -1,57 +1,221 @@
-# Sample Hardhat 3 Project (`mocha` and `ethers`)
+# Ecto Treasury
 
-This project showcases a Hardhat 3 project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+A lightweight treasury contract designed to serve as the financial backbone of the PhanicVerse ecosystem.
 
-To learn more about Hardhat 3, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3](https://hardhat.org/hardhat3-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+The Ecto Treasury is responsible for receiving and securely storing both native blockchain assets and approved ERC-20 tokens while emitting standardized deposit events that can be consumed by off-chain services such as indexers, ledgers, reward systems, and future ECTO infrastructure.
 
-## Project Overview
+The contract is intentionally minimal and focused on treasury operations, keeping business logic and ecosystem mechanics off-chain where they can evolve without requiring contract upgrades.
 
-This example project includes:
+---
 
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+## Features
 
-## Usage
+- Accept native currency deposits (ETH, S, etc.)
+- Accept approved ERC-20 token deposits
+- Emit standardized deposit events
+- Owner-controlled treasury withdrawals
+- ERC-20 token withdrawals
+- Emergency full-balance token withdrawals
+- Pausable operations
+- ERC-20 token whitelist
+- Event-driven architecture for off-chain indexing
+- Comprehensive unit test coverage
 
-### Running Tests
+---
 
-To run all the tests in the project, execute the following command:
+## Supported Deposit Types
 
-```shell
-npx hardhat test
+### Native Currency
+
+Users can deposit the native asset of the chain directly into the treasury.
+
+Examples:
+- Ethereum → ETH
+- Sonic → S
+
+Deposits can be made through direct transfers or dedicated deposit functions depending on the integration.
+
+### ERC-20 Tokens
+
+Only approved tokens may be deposited.
+
+Examples include:
+
+- USDC
+- USDT
+- PHANIC
+- Future expansions can be considered
+
+---
+
+## Events
+
+The treasury emits standardized events designed for consumption by external indexers and accounting systems.
+
+### Deposit
+
+```solidity
+event Deposit(
+    address indexed user,
+    address indexed token,
+    uint256 amount
+);
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
+Native currency deposits use:
 
-```shell
-npx hardhat test solidity
-npx hardhat test mocha
+```solidity
+token = address(0)
 ```
 
-### Make a deployment to Sepolia
+ERC-20 deposits use:
 
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
-
-To run the deployment to a local chain:
-
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
+```solidity
+token = tokenAddress
 ```
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
+---
 
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
 
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
+## Design Philosophy
 
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+The treasury is intentionally kept simple.
+
+Responsibilities include:
+
+- Receiving assets
+- Holding assets
+- Emitting events
+- Processing withdrawals
+
+Responsibilities intentionally excluded:
+
+- ECTO accounting
+- User balances
+- Reward calculations
+- Slot mechanics
+- NFT rewards
+- Staking rewards
+- Marketplace logic
+
+These systems are handled off-chain and may evolve independently from the treasury.
+
+---
+
+## ECTO Integration
+
+The treasury serves as the entry point into the ECTO ecosystem.
+
+External indexers can monitor treasury events and convert deposits into ECTO ledger entries.
+
+Example flow:
+
+```text
+User Deposit
+      ↓
+Treasury Event
+      ↓
+Indexer
+      ↓
+ECTO Ledger
+      ↓
+Games / Utilities / Rewards
 ```
 
-After setting the variable, you can run the deployment with the Sepolia network:
+This architecture allows the ecosystem to operate across multiple chains while maintaining a unified off-chain accounting layer.
 
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
-```
+---
+
+## Multi-Chain Ready
+
+The treasury is designed to be deployed across multiple EVM-compatible networks. It is planned
+for integration between Sonic and Ethereum specially, but other chains aren't discarded.
+
+Examples:
+- Ethereum
+- Sonic
+- Polygon
+- Arbitrum
+- Base
+
+Each deployment emits the same event structure, simplifying indexer implementation and future ecosystem expansion.
+
+---
+
+## Security
+
+The treasury incorporates several security-focused design decisions:
+
+- Token whitelist enforcement
+- Ownership-based access control
+- Pausable operations
+- Safe ERC-20 transfers
+- Minimal attack surface
+- No external business logic execution
+
+The contract does not custody user balances beyond treasury deposits and does not perform reward calculations or gambling logic.
+
+---
+
+## Testing
+
+The repository includes a comprehensive unit test suite covering:
+
+### Native Deposits
+
+- Successful deposits
+- Direct transfers
+- Zero-value rejections
+- Paused state behavior
+
+### ERC-20 Deposits
+
+- Successful deposits
+- Unsupported token rejections
+- Allowance validation
+- Balance validation
+
+### Withdrawals
+
+- Native asset withdrawals
+- ERC-20 withdrawals
+- Full token withdrawals
+- Access control validation
+
+### Administration
+
+- Ownership restrictions
+- Pause functionality
+- Token whitelist management
+
+### Error Handling
+
+- Invalid deposits
+- Invalid withdrawals
+- Unsupported tokens
+- Unauthorized access attempts
+
+All contract functionality is covered by automated tests.
+
+---
+
+
+## Future Ecosystem Usage
+
+The Ecto Treasury is intended to become a foundational component of the broader PhanicVerse ecosystem.
+
+Future integrations may include:
+
+- ECTO Ledger
+- ECTO-powered games
+- NFT acquisition systems
+- Staking utilities
+- Cross-chain participation rewards
+- Marketplace integrations
+- Ecosystem incentive programs
+
+---
+
+## License
+
+MIT
