@@ -12,7 +12,7 @@ async function main() {
         await ethers.getSigners();
 
     console.log(
-        "Network:",
+        "Network: ",
         await ethers.provider.send(
             "web3_clientVersion",
             []
@@ -20,12 +20,12 @@ async function main() {
     );
 
     console.log(
-        "Address:",
+        "Address: ",
         signer.address
     );
 
     console.log(
-        "Nonce before:",
+        "Nonce before: ",
         await signer.getNonce()
     );
 
@@ -33,7 +33,7 @@ async function main() {
         await ethers.provider.getNetwork();
 
     console.log(
-        "Chain ID:",
+        "Chain ID: ",
         net.chainId
     );
 
@@ -49,7 +49,7 @@ async function main() {
         );
 
     console.log(
-        "Balance Before:",
+        "Balance Before: ",
         ethers.formatEther(before)
     );
 
@@ -60,7 +60,7 @@ async function main() {
         });
 
     console.log(
-        "Transaction sent:",
+        "Transaction sent: ",
         tx.hash
     );
 
@@ -72,7 +72,7 @@ async function main() {
         );
 
     console.log(
-        "Balance After:",
+        "Balance After: ",
         ethers.formatEther(after)
     );
 }

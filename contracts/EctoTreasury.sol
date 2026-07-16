@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.33;
+pragma solidity ^0.8.26;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
@@ -9,12 +9,10 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 /* 
 
     Planned supported ERC-20 tokens on Ethereum blockchain:
-    USDT: 0xdAC17F958D2ee523a2206206994597C13D831ec7
-    USDC: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+     USDC: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
 
     Planned supported ERC-20 tokens on Sonic blockchain:
       USDC: 0x29219dd400f2Bf60E5a23d13Be72B486D4038894
-      USSD: 0x000000000eCcFf26B795F73fb0A70d48da657fEf  
     PHANIC: 0xB4F58eeAbE36711D72e99f35cbf36210561522bE
 
 */

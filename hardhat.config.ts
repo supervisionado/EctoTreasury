@@ -8,10 +8,10 @@ export default defineConfig({
   solidity: {
     profiles: {
       default: {
-        version: "0.8.33",
+        version: "0.8.26",
       },
       production: {
-        version: "0.8.33",
+        version: "0.8.26",
         settings: {
           optimizer: {
             enabled: true,
@@ -28,8 +28,13 @@ export default defineConfig({
       url: "http://127.0.0.1:8545"
     },
     hardhatMainnet: {
-      type: "edr-simulated",
+      type: "http",
+      url: "http://127.0.0.1:8545",
+      chainId: 31337,
       chainType: "l1",
+      accounts: {
+        mnemonic: "test test test test test test test test test test test junk"
+      }
     },
     hardhatOp: {
       type: "edr-simulated",
