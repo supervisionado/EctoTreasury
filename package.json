@@ -10,6 +10,7 @@
     "deploy:dev": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network localhost",
     "deploy:sep": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network sepolia",
     "deploy:eth": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network mainnet",
+    "deploy:sonic": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network sonic",
     "deploy:stst": "npx hardhat ignition deploy ignition/modules/EctoTreasury.ts --network sonicTestnet"
   },
   "keywords": [],
